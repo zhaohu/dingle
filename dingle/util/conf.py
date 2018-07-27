@@ -25,6 +25,7 @@ def load_config(config_dict=None, config_file=None):
     '''
     if config_dict is not None:
         CONFIG.update(copy.copy(config_dict))
+        return CONFIG
     if not config_file:
         config_file = "dingtalk.json"
     if not os.path.exists(config_file):
