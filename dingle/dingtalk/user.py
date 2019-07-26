@@ -7,12 +7,14 @@ import threading
 from ..util.api import client
 from .department import get_all_department_list
 
+
 def get_org_user_count(onlyActive):
     '''
     获取企业员工人数
     https://open-doc.dingtalk.com/docs/doc.htm?spm=a219a.7629140.0.0.HmCz25&treeId=371&articleId=105485&docType=1#s0
     '''
-    resp = client.call('GET', '/user/get_org_user_count', onlyActive=onlyActive)
+    resp = client.call('GET', '/user/get_org_user_count',
+                       params={'onlyActive': onlyActive})
     return resp.json()
 
 
@@ -48,10 +50,12 @@ def list(department_id, lang='zh_CN', offset=None, size=None, order=None):
 
 
 def get_user_list(api, department_id, fetch_child=False):
+    department_id_list = [department_id]
     if fetch_child:
-        department_id_list = [i['id'] for i in get_all_department_list()]
-    else:
-        department_id_list = [department_id]
+        department_id_list.extend([i['id'] for i in\
+                                   get_all_department_list(department_id)])
+
+    userid_set = set()
     user_list = []
     for dp_id in department_id_list:
         offset = 0
@@ -59,8 +63,11 @@ def get_user_list(api, department_id, fetch_child=False):
         while True:
             ret = list_base(api, dp_id, offset=offset, size=size)
             for i in ret.get('userlist', []):
+                if i['userid'] in userid_set:
+                    continue
                 user_list.append(i)
+                userid_set.add(i['userid'])
             if not ret.get('hasMore'):
                 break
-
+            offset += size
     return user_list

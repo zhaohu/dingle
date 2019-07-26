@@ -30,7 +30,7 @@ def parse_args():
                         help="Call an top api")
     parser.add_argument("--call-func", action="store_true",
                         help="Call a function in dingtalk module. ")
-    parser.add_argument("options", default=[], nargs="*") 
+    parser.add_argument("options", default=[], nargs="*")
     return parser.parse_args()
 
 
@@ -59,7 +59,7 @@ def dingtalk_func_call(module, method, *args):
     module_name = 'dingle.dingtalk.%s' % module
     imported = importlib.import_module(module_name)
     func = getattr(imported, method)
-    spec = inspect.getargspec(func)
+    spec = inspect.getfullargspec(func)
     args_count = len(spec.args) - len(spec.defaults or [])
     if len(args) > args_count:
         kwargs = json.loads(args[args_count])
@@ -80,8 +80,10 @@ def main():
     if args.get('verbose2'):
         config['verbose2'] = True
     json_log(args, 'args')
-    manager = TokenManager(corp_id=config['corp_id'],
-                           corp_secret=config['corp_secret'])
+    manager = TokenManager(app_key=config.get('app_key'),
+                           app_secret=config.get('app_secret'),
+                           corp_id=config.get('corp_id'),
+                           corp_secret=config.get('corp_secret'))
     client.set_manager(manager)
     if args.get('access_token'):
         manager.set_access_token(args['access_token'])
