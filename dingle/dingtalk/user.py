@@ -71,3 +71,13 @@ def get_user_list(api, department_id, fetch_child=False):
                 break
             offset += size
     return user_list
+
+
+def getuserinfo(code):
+    resp = client.call('GET', '/user/getuserinfo', params={'code': code})
+    return resp.json()
+
+
+def get(userid):
+    resp = client.call('GET', '/user/get', params={'userid': userid})
+    return resp.json()
