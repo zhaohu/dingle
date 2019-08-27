@@ -4,6 +4,7 @@ Manage dingtalk messages.
 '''
 import time
 import json
+import urllib.parse
 from ..util.conf import get_config
 from ..util.api import client
 
@@ -14,7 +15,7 @@ def get_pc_link(link, pc_slide='true'):
     '''
     pc_slide = 'true' if pc_slide == 'true' else 'false'
     pc_link = 'dingtalk://dingtalkclient/page/link?pc_slide=%s&url=%s'\
-              % (pc_slide, urllib.encode(link))
+              % (pc_slide, urllib.parse.quote(link))
     return pc_link
 
 

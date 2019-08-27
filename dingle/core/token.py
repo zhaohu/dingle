@@ -4,6 +4,7 @@ Manage dingtalk tokens, for example access token.
 '''
 import time
 import uuid
+import urllib.parse
 import hashlib
 import threading
 from ..util.api import client
@@ -63,7 +64,6 @@ class TokenManager(object):
             resp = client.call('GET', '/get_jsapi_ticket',
                                params={'access_token': self.get_access_token()})
             ret = resp.json()
-            print(ret)
             if ret['errcode'] == 0:
                 jsapi_ticket = {'ticket': ret['ticket'], 'expires': int(time.time() - 60) + ret['expires_in']}
             else:
@@ -81,6 +81,7 @@ class TokenManager(object):
         return signature
 
     def get_dd_config(self, url, api_list=None, type=0):
+        unquoted_url = urllib.parse.unquote(url)
         if api_list is None:
             api_list = []
         ret = {
@@ -90,6 +91,8 @@ class TokenManager(object):
             'corpId': self.corp_id,
             'type': type
         }
-        ret['signature'] = self.get_js_signature(ret['nonceStr'], ret['timeStamp'], url)
+        ret['signature'] = self.get_js_signature(ret['nonceStr'],
+                                                 ret['timeStamp'],
+                                                 unquoted_url)
         ret['jsApiList'] = api_list
         return ret
