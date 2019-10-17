@@ -8,6 +8,7 @@ from .conf import get_config
 
 logger = logging.getLogger('dingle')
 
+
 def json_log(obj, desc=None):
     config = get_config()
     message = desc if desc else ''

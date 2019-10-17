@@ -8,6 +8,92 @@ from ..util.api import client
 from .department import get_all_department_list
 
 
+def create(userid=None,
+           name=None,
+           order_in_depts=None,
+           department=None,
+           position=None,
+           mobile=None,
+           tel=None,
+           work_place=None,
+           remark=None,
+           email=None,
+           org_email=None,
+           jobnumber=None,
+           is_hide=False,
+           is_senior=False,
+           extattr=None,
+           hired_date=None):
+    check_none_params(name=name,
+                      department=department)
+    data = {
+        "userid": userid,
+        "name": name,
+        "orderInDepts": order_in_depts,
+        "department": department,
+        "position": position,
+        "mobile": mobile,
+        "tel": tel,
+        "workPlace": "work_place",
+        "remark": remark,
+        "email": email,
+        "orgEmail": "org_email",
+        "jobnumber": jobnumber,
+        "isHide": is_hide,
+        "isSenior": is_senior,
+        "extattr": extattr,
+        "hiredDate": hired_date
+    }
+    resp = client.call('POST', '/user/create', json=data)
+    return resp.json()
+
+
+def update(lang=None,
+           userid=None,
+           name=None,
+           order_in_depts=None,
+           department=None,
+           position=None,
+           mobile=None,
+           tel=None,
+           work_place=None,
+           remark=None,
+           email=None,
+           org_email=None,
+           jobnumber=None,
+           is_hide=False,
+           is_senior=False,
+           extattr=None,
+           hired_date=None):
+    check_none_params(name=name)
+    data = {
+        "userid": userid,
+        "name": name,
+        "orderInDepts": order_in_depts,
+        "department": department,
+        "position": position,
+        "mobile": mobile,
+        "tel": tel,
+        "workPlace": "work_place",
+        "remark": remark,
+        "email": email,
+        "orgEmail": "org_email",
+        "jobnumber": jobnumber,
+        "isHide": is_hide,
+        "isSenior": is_senior,
+        "extattr": extattr,
+        "hiredDate": hired_date
+    }
+    resp = client.call('POST', '/user/update', json=data)
+    return resp.json()
+
+
+def delete(userid):
+    resp = client.call('GET', '/user/delete',
+                       params={'userid': userid})
+    return resp.json()
+
+
 def get_org_user_count(onlyActive):
     '''
     获取企业员工人数

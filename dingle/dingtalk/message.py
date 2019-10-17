@@ -149,7 +149,7 @@ def corpconversation_asyncsendbycode(agent_id=None, msg=None,
                               to_all_user=to_all_user,
                               code=code).items() if v}
     params['msgtype'] = msg.msgtype
-    params['msgcontent'] = json.dumps(dict(msg))
+    params['msgcontent'] = dict(msg)
     resp = client.call('POST',
                        '/topapi/message/corpconversation/asyncsendbycode',
                        data=params)

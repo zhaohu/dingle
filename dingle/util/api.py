@@ -14,6 +14,16 @@ DINGTALK_API_BASE = 'https://oapi.dingtalk.com'
 DINGTALK_TOP_API_BASE = 'https://eco.taobao.com/router/rest'
 
 
+def check_none_params(**kwargs):
+    '''
+    Check whether params in kwargs are None.
+    '''
+    for k, v in kwargs.items():
+        if v is None:
+            raise Exception("Param %s should not be None." % k)
+    return True
+
+
 class APIClient(object):
     def __init__(self, manager=None):
         self.session = requests.Session()
@@ -35,13 +45,7 @@ class APIClient(object):
             kwargs['params']['access_token'] = self.manager.get_access_token()
         path = '/%s' % path.lstrip('/')
         url = '%s%s' % (DINGTALK_API_BASE, path)
-        req_kwargs = {}
-        for k, v in kwargs.items():
-            if isinstance(v, bool):
-                req_kwargs[k] = 'true' if v else 'false'
-            else:
-                req_kwargs[k] = v
-        resp = self.session.request(method, url, **req_kwargs)
+        resp = self.session.request(method, url, **kwargs)
         logger = logging.getLogger(__name__)
         json_log({"method": method,
                   "path": path,
